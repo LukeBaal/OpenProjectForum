@@ -2,8 +2,13 @@ const express = require('express');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
 const path = require('path');
+const session = require('express-session');
+const passport = require('passport');
 
 const app = express();
+
+// Init Passport
+require('./config/passport')(passport);
 
 // Database
 const db = require('./config/database');
@@ -21,6 +26,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Express session
+app.use(
+  session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // @route GET /
 // @desc Home route
 app.get('/', (req, res) => {
@@ -31,5 +48,5 @@ app.use('/user', require('./routes/user'));
 
 app.use('/projects', require('./routes/projects'));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5005;
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

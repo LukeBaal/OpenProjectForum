@@ -11,7 +11,7 @@
 
   <div class="form-group">
     <label for="password">Password</label>
-    <input type="text" class="form-control {{#if errors.password}}is-invalid{{/if}}" name="password" id="password"
+    <input type="password" class="form-control {{#if errors.password}}is-invalid{{/if}}" name="password" id="password"
       value={{password}}>
     {{#if errors.password}}
     <div class="text-danger">{{errors.password}}</div>
@@ -20,7 +20,7 @@
 
   <div class="form-group">
     <label for="password2">Confirm Password</label>
-    <input type="text" class="form-control {{#if errors.password2}}is-invalid{{/if}} {{#if errors.passwordmatch}}is-invalid{{/if}}"
+    <input type="password" class="form-control {{#if errors.password2}}is-invalid{{/if}} {{#if errors.passwordmatch}}is-invalid{{/if}}"
       name="password2" id="password2" value={{password2}}>
     {{#if errors.password2}}
     <div class="text-danger">{{errors.password2}}</div>

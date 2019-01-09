@@ -1,16 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/database');
+const bcrypt = require('bcryptjs');
+const passport = require('passport');
+
+const { ensureAuthenticated } = require('../config/auth');
+
 const User = require('../models/User');
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
 
 // User Profile
-router.get('/', (req, res) => {
+router.get('/', ensureAuthenticated, (req, res) => {
   res.render('user', {
-    username: 'Test user',
-    email: 'test@gmail.com',
-    bio: 'I do things.'
+    user: req.user
   });
 });
 
@@ -46,22 +46,75 @@ router.post('/register', (req, res) => {
       password2,
       email
     });
+  } else {
+    User.findOne({ email: email }).then(user => {
+      if (user) {
+        errors.emailexists = 'Email already exists';
+        res.render('register', {
+          errors,
+          username,
+          password,
+          password2,
+          email
+        });
+      } else {
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(password, salt, (err, hash) => {
+            if (err) throw err;
+            // Add user to DB
+            User.create({
+              username,
+              password: hash,
+              email
+            })
+              .then(user => res.redirect('/user'))
+              .catch(err => console.error(err));
+          });
+        });
+      }
+    });
   }
-
-  // TODO: Use bcrypt to encrypt password
-  // Add user to DB
-  User.create({
-    username,
-    password,
-    email
-  })
-    .then(user => res.redirect('/user'))
-    .catch(err => console.error(err));
 });
 
-// Login
+// @route PUT /bio
+// @desc Update user bio
+router.post('/bio', (req, res) => {
+  const { bio } = req.body;
+  if (!bio) {
+    res.redirect('/user');
+  }
+  User.update(
+    { bio },
+    {
+      where: {
+        id: req.user.id
+      }
+    }
+  )
+    .then(() => res.redirect('/user'))
+    .catch(err => console.log(err));
+});
+
+// @route GET /login
+// @desc Login page
 router.get('/login', (req, res) => {
   res.render('login');
+});
+
+// @route POST /login
+// @desc login authentication
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', {
+    successRedirect: '/user',
+    failureRedirect: '/user/login'
+  })(req, res, next);
+});
+
+// @route GET /logout
+// @desc logout route
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.redirect('/user/login');
 });
 
 module.exports = router;
