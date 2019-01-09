@@ -1,0 +1,15 @@
+<h1 class="card-title">{{ username }}</h1>
+<h3>{{email}}</h3>
+<form action="/user/bio" method="POST">
+  <div class="form-group">
+    <label for="bio">Bio</label>
+    <textarea class="form-control mb-2" name="bio" id="bio" cols="30" rows="10">
+    {{#if bio}}
+    {{bio}}
+    {{else}}
+      Enter a bio
+    {{/if}}
+    </textarea>
+    <input type="submit" value="Edit" class="btn btn-block btn-warning">
+  </div>
+</form>
