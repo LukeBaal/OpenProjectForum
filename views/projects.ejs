@@ -1,0 +1,31 @@
+<h1>All Projects</h1>
+<% projects.forEach(project => { %>
+<div class="card bg-secondary mb-3">
+  <div class="card-body">
+    <div class="d-flex justify-content-between">
+      <h3><%= project.title %></h3>
+      <% if (user.id == project.user.id) {%>
+      <div class="button-group">
+        <form method="POST" action="/projects/edit/<%= project.id %>?_method=PUT">
+          <button class="btn btn-warning my-auto">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+        </form>
+      </div>
+      <% } %>
+    </div>
+      <p class="headline text-muted">Author: <%= project.user.username %></p>
+    <% if (project.description) { %>
+      <p class="card-text"><%= project.description %></p>
+    <% } %>
+  </div>
+  <% if (project.github) { %>
+    <div class="card-body">
+      <a href="<%= project.github %>" class="card-link">
+        <i class="fab fa-github"></i>
+        GitHub
+      </a>
+    </div>
+  <% } %>
+</div>
+<% }); %>

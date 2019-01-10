@@ -7,16 +7,11 @@ const { ensureAuthenticated } = require('../config/auth');
 
 const User = require('../models/User');
 
-// User Profile
-router.get('/', ensureAuthenticated, (req, res) => {
-  res.render('user', {
-    user: req.user
-  });
-});
-
 // Register
 router.get('/register', (req, res) => {
-  res.render('register');
+  res.render('register', {
+    errors: {}
+  });
 });
 
 // @route POST /register
@@ -47,9 +42,9 @@ router.post('/register', (req, res) => {
       email
     });
   } else {
-    User.findOne({ email: email }).then(user => {
+    User.findOne({ where: { username: username } }).then(user => {
       if (user) {
-        errors.emailexists = 'Email already exists';
+        errors.username = 'Username already exists';
         res.render('register', {
           errors,
           username,
@@ -67,7 +62,7 @@ router.post('/register', (req, res) => {
               password: hash,
               email
             })
-              .then(user => res.redirect('/user'))
+              .then(user => res.redirect(`/user/profile/${username}`))
               .catch(err => console.error(err));
           });
         });
@@ -105,7 +100,7 @@ router.get('/login', (req, res) => {
 // @desc login authentication
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
-    successRedirect: '/user',
+    successRedirect: `/user/profile/1`,
     failureRedirect: '/user/login'
   })(req, res, next);
 });
@@ -115,6 +110,20 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/user/login');
+});
+
+// User Profile
+router.get('/profile/:username', ensureAuthenticated, (req, res) => {
+  User.findOne({ where: { username: req.params.username } }).then(user => {
+    if (user) {
+      res.render('user', {
+        user,
+        auth_user: req.user
+      });
+    } else {
+      res.redirect('/projects');
+    }
+  });
 });
 
 module.exports = router;

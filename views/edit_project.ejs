@@ -1,0 +1,29 @@
+<h1 class="card-title">Edit Project</h1>
+<form action="/projects/edit" method="POST" class="needs-validation">
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" class="form-control <%= errors.title ? 'is-invalid' : '' %>" name="title" id="title" value="<%= typeof title !== 'undefined' ? title : ''%>">
+    <% if (errors.title) { %>
+    <div class="text-danger"><%= errors.title %></div>
+    <% } %>
+  </div>
+
+  <div class="form-group">
+    <label for="github">GitHub</label>
+    <input type="text" class="form-control" name="github" id="github" value="<%= typeof github !== 'undefined' ? github : '' %>">
+  </div>
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea name="description" id="desciption" cols="30" rows="5" class="form-control">
+<% if (typeof description !== 'undefined') { %>
+<%= description -%>
+<% } %>    
+    </textarea>
+  </div>
+
+  <button type="submit" class="btn btn-warning btn-block">
+    <i class="fas fa-pencil mr-2"></i>
+    Edit
+  </button>
+</form>

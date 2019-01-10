@@ -1,0 +1,39 @@
+<h1 class="card-title">Register</h1>
+<form action="/user/register" method="POST" class="needs-validation">
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" class="form-control <%= errors.username ? 'is-invalid': '' %>" name="username" id="username"
+      value="<%= typeof username !== 'undefined' ? username : '' %>">
+    <% if (errors.username){ %>
+      <div class="text-danger"><%= errors.username %></div>
+    <% } %>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" class="form-control <%= errors.password ? 'is-invalid': '' %>" name="password" id="password"
+      value="<%= typeof password !== 'undefined' ? password : '' %>">
+    <% if (errors.password) { %>
+    <div class="text-danger"><%= errors.password %></div>
+    <% } %>
+  </div>
+
+  <div class="form-group">
+    <label for="password2">Confirm Password</label>
+    <input type="password" class="form-control <%= errors.password2 ? 'is-invalid': '' %> <%= errors.passwordmatch ? 'is-invalid': '' %>"
+      name="password2" id="password2" value="<%= typeof password2 !== 'undefined' ? password2 : '' %>">
+    <% if (errors.password2) { %>
+    <div class="text-danger">{{errors.password2}}</div>
+    <% } %>
+    <% if (errors.passwordmatch) { %>
+    <div class="text-danger">{{errors.passwordmatch}}</div>
+    <% } %>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Contact Email</label>
+    <input type="text" class="form-control" name="email" id="email" value="<%= typeof email !== 'undefined' ? email : '' %>">
+  </div>
+
+  <input type="submit" class="btn btn-primary btn-block" value="Register" />
+</form>

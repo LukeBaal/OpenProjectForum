@@ -7,13 +7,12 @@ const { ensureAuthenticated } = require('../config/auth');
 // @route GET /
 // @desc Get all projects
 router.get('/', ensureAuthenticated, (req, res) => {
-  User.hasMany(Project, { foreignKey: 'author_id' });
-  Project.belongsTo(User, { foreignKey: 'author_id' });
+  Project.belongsTo(User, { foreignKey: 'user_id', sourceKey: 'id' });
+  User.hasMany(Project, { foreignKey: 'user_id', sourceKey: 'id' });
   Project.findAll({
     include: [
       {
-        model: User,
-        where: ['author_id = id']
+        model: User
       }
     ]
   })
@@ -30,18 +29,22 @@ router.get('/', ensureAuthenticated, (req, res) => {
 // @route GET /add
 // @desc Add project form
 router.get('/add', ensureAuthenticated, (req, res) => {
-  res.render('add_project');
+  res.render('add_project', {
+    errors: {}
+  });
 });
 
 // @route POST /add
 // @desc Add new project
 router.post('/add', ensureAuthenticated, (req, res) => {
-  const { title, github, description } = req.body;
+  let { title, github, description } = req.body;
   const errors = {};
 
   if (!title) {
     errors.title = 'Please enter a title';
   }
+
+  description = description.trim();
 
   if (Object.keys(errors).length > 0) {
     res.render('add_project', {
@@ -55,8 +58,66 @@ router.post('/add', ensureAuthenticated, (req, res) => {
       title,
       github,
       description,
-      author_id: req.user.id
+      user_id: req.user.id
     })
+      .then(() => res.redirect('/projects'))
+      .catch(err => console.log(err));
+  }
+});
+
+// @route GET /edit
+// @desc Edit project form
+router.get('/edit/:id', ensureAuthenticated, (req, res) => {
+  Project.findByPk(req.params.id).then(project => {
+    if (project) {
+      console.log(`Project id: ${project.id}`);
+      res.render('edit_project', {
+        id: project.id,
+        title: project.title,
+        github: project.github,
+        description: project.description,
+        errors: {}
+      });
+    } else {
+      res.redirect('/projects');
+    }
+  });
+});
+
+// @route PUT /edit
+// @desc Edit project
+router.put('/edit/:id', ensureAuthenticated, (req, res) => {
+  let { title, github, description } = req.body;
+  const errors = {};
+
+  if (description) {
+    description = description.trim();
+  }
+
+  if (!title) {
+    errors.title = 'Please enter a title';
+  }
+
+  if (Object.keys(errors).length > 0) {
+    res.render('edit_project', {
+      errors,
+      title,
+      github,
+      description
+    });
+  } else {
+    Project.update(
+      {
+        title,
+        github,
+        description
+      },
+      {
+        where: {
+          id: req.params.id
+        }
+      }
+    )
       .then(() => res.redirect('/projects'))
       .catch(err => console.log(err));
   }
