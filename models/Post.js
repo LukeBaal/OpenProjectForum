@@ -1,18 +1,19 @@
 const Sequelize = require('sequelize');
 const db = require('../config/database');
+const Project = require('./Project');
 const User = require('./User');
 
-const Project = db.define(
-  'Project',
+const Post = db.define(
+  'Post',
   {
     title: {
       type: Sequelize.STRING
     },
-    github: {
+    body: {
       type: Sequelize.STRING
     },
-    description: {
-      type: Sequelize.STRING
+    rating: {
+      type: Sequelize.INTEGER
     }
   },
   {
@@ -20,7 +21,9 @@ const Project = db.define(
   }
 );
 
-Project.belongsTo(User);
-User.hasMany(Project);
+Post.belongsTo(Project);
+Post.belongsTo(User);
+Project.hasMany(Post);
+User.hasMany(Post);
 
-module.exports = Project;
+module.exports = Post;

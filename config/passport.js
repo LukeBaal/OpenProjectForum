@@ -2,10 +2,11 @@ const LocalStrategy = require('passport-local').Strategy;
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
-module.exports = function(passport) {
+module.exports = function (passport) {
   passport.use(
-    new LocalStrategy(
-      { usernameField: 'username' },
+    new LocalStrategy({
+        usernameField: 'username'
+      },
       (username, password, done) => {
         console.log('logging in....');
         // Find matching user
@@ -16,7 +17,9 @@ module.exports = function(passport) {
         }).then(user => {
           if (!user) {
             console.log('no user found...');
-            return done(null, false, { message: 'Invalid username' });
+            return done(null, false, {
+              message: 'Invalid username'
+            });
           }
 
           // Compare passwords
@@ -27,7 +30,9 @@ module.exports = function(passport) {
               return done(null, user);
             } else {
               console.log('passwords DONT match');
-              return done(null, false, { message: 'Invalid password' });
+              return done(null, false, {
+                message: 'Invalid password'
+              });
             }
           });
         });
@@ -35,11 +40,11 @@ module.exports = function(passport) {
     )
   );
 
-  passport.serializeUser(function(user, done) {
+  passport.serializeUser(function (user, done) {
     done(null, user.id);
   });
 
-  passport.deserializeUser(function(id, done) {
+  passport.deserializeUser(function (id, done) {
     User.findByPk(id)
       .then(user => {
         console.log('found user by pk');

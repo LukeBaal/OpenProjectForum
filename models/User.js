@@ -14,6 +14,8 @@ const User = db.define('user', {
   email: {
     type: Sequelize.TEXT
   }
+}, {
+  underscored: true
 });
 
 module.exports = User;
