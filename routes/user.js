@@ -3,9 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 
-const {
-  ensureAuthenticated
-} = require('../config/auth');
+const { ensureAuthenticated } = require('../config/auth');
 
 const User = require('../models/User');
 
@@ -19,12 +17,7 @@ router.get('/register', (req, res) => {
 // @route POST /register
 // @desc Create user
 router.post('/register', (req, res) => {
-  let {
-    username,
-    password,
-    password2,
-    email
-  } = req.body;
+  let { username, password, password2, email } = req.body;
   let errors = {};
 
   if (!username) {
@@ -69,10 +62,10 @@ router.post('/register', (req, res) => {
             if (err) throw err;
             // Add user to DB
             User.create({
-                username,
-                password: hash,
-                email
-              })
+              username,
+              password: hash,
+              email
+            })
               .then(user => res.redirect(`/user/profile/${username}`))
               .catch(err => console.error(err));
           });
@@ -84,21 +77,22 @@ router.post('/register', (req, res) => {
 
 // @route PUT /bio
 // @desc Update user bio
-router.post('/bio', (req, res) => {
-  const {
-    bio
-  } = req.body;
+router.post('/bio', ensureAuthenticated, (req, res) => {
+  const { bio } = req.body;
   if (!bio) {
-    res.redirect('/user');
+    res.redirect(`/user/profile/${req.user.username}`);
   }
-  User.update({
+  User.update(
+    {
       bio
-    }, {
+    },
+    {
       where: {
         id: req.user.id
       }
-    })
-    .then(() => res.redirect('/user'))
+    }
+  )
+    .then(() => res.redirect(`/user/profile/${req.user.username}`))
     .catch(err => console.log(err));
 });
 
@@ -119,12 +113,14 @@ router.post('/login', (req, res, next) => {
 
 // @route GET /logout
 // @desc logout route
-router.get('/logout', (req, res) => {
+router.get('/logout', ensureAuthenticated, (req, res) => {
   req.logout();
   res.redirect('/user/login');
 });
 
-// User Profile
+// @route /profile/:username
+// @desc User Profile
+// @param username - username of user
 router.get('/profile/:username', ensureAuthenticated, (req, res) => {
   User.findOne({
     where: {

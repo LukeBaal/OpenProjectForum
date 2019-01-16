@@ -1,20 +1,20 @@
 const express = require('express');
-const router = express.Router();
 const Project = require('../models/Project');
 const User = require('../models/User');
-const {
-  ensureAuthenticated
-} = require('../config/auth');
+const { ensureAuthenticated } = require('../config/auth');
+
+const router = express.Router();
 
 // @route GET /
 // @desc Get all projects
 router.get('/', ensureAuthenticated, (req, res) => {
-
   Project.findAll({
-      include: [{
+    include: [
+      {
         model: User
-      }]
-    })
+      }
+    ]
+  })
     .then(projects => {
       console.log(projects);
       res.render('projects', {
@@ -36,11 +36,7 @@ router.get('/add', ensureAuthenticated, (req, res) => {
 // @route POST /add
 // @desc Add new project
 router.post('/add', ensureAuthenticated, (req, res) => {
-  let {
-    title,
-    github,
-    description
-  } = req.body;
+  let { title, github, description } = req.body;
   const errors = {};
 
   if (!title) {
@@ -58,11 +54,11 @@ router.post('/add', ensureAuthenticated, (req, res) => {
     });
   } else {
     Project.create({
-        title,
-        github,
-        description,
-        user_id: req.user.id
-      })
+      title,
+      github,
+      description,
+      user_id: req.user.id
+    })
       .then(() => res.redirect('/projects'))
       .catch(err => console.log(err));
   }
@@ -90,11 +86,7 @@ router.get('/edit/:id', ensureAuthenticated, (req, res) => {
 // @route PUT /edit
 // @desc Edit project
 router.put('/edit/:id', ensureAuthenticated, (req, res) => {
-  let {
-    title,
-    github,
-    description
-  } = req.body;
+  let { title, github, description } = req.body;
   const errors = {};
 
   if (description) {
@@ -113,15 +105,18 @@ router.put('/edit/:id', ensureAuthenticated, (req, res) => {
       description
     });
   } else {
-    Project.update({
+    Project.update(
+      {
         title,
         github,
         description
-      }, {
+      },
+      {
         where: {
           id: req.params.id
         }
-      })
+      }
+    )
       .then(() => res.redirect('/projects'))
       .catch(err => console.log(err));
   }

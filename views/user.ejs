@@ -4,7 +4,7 @@
 <p class="headline text-muted">Bio</p>
 <p><%= user.bio %></p>
 <% } else { %>
-<form action="/auth_user/bio" method="POST">
+<form action="/auth_user/bio?_method=PUT" method="POST">
   <div class="form-group">
     <label for="bio">Bio</label>
     <textarea class="form-control mb-2" name="bio" id="bio" cols="30" rows="10">
