@@ -6,19 +6,28 @@ const path = require('path');
 const session = require('express-session');
 const passport = require('passport');
 const methodOverride = require('method-override');
+const User = require('./models/User');
+const Project = require('./models/Project');
+const Post = require('./models/Post');
 
 const app = express();
 
 // Init Passport
 require('./config/passport')(passport);
 
+process.env.NODE_ENV = 'test'
 // Database
-const db = require('./config/database');
+const db = require('./config/database')[process.env.NODE_ENV || 'dev'];
 
 // Test database connection
 db.authenticate()
   .then(() => console.log('Database connected'))
   .catch(err => console.error(err));
+
+// Create tables in db if they don't exist
+User.sync();
+Project.sync();
+Post.sync();
 
 // Middleware
 // app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
@@ -26,7 +35,9 @@ db.authenticate()
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -56,4 +67,4 @@ app.use('/user', require('./routes/user'));
 app.use('/projects', require('./routes/projects'));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+module.exports = app.listen(PORT, () => console.log(`Server started on port ${PORT}`));

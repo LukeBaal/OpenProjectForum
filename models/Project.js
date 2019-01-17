@@ -1,10 +1,9 @@
 const Sequelize = require('sequelize');
-const db = require('../config/database');
+const db = require('../config/database')[process.env.NODE_ENV || 'dev'];
 const User = require('./User');
 
 const Project = db.define(
-  'Project',
-  {
+  'Project', {
     title: {
       type: Sequelize.STRING
     },
@@ -14,8 +13,7 @@ const Project = db.define(
     description: {
       type: Sequelize.STRING
     }
-  },
-  {
+  }, {
     underscored: true
   }
 );
