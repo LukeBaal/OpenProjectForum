@@ -3,9 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 
-const {
-  ensureAuthenticated
-} = require('../config/auth');
+const { ensureAuthenticated } = require('../config/auth');
 
 const User = require('../models/User');
 
@@ -19,12 +17,7 @@ router.get('/register', (req, res) => {
 // @route POST /register
 // @desc Create user
 router.post('/register', (req, res) => {
-  let {
-    username,
-    password,
-    password2,
-    email
-  } = req.body;
+  let { username, password, password2, email } = req.body;
   let errors = {};
 
   if (!username) {
@@ -69,11 +62,11 @@ router.post('/register', (req, res) => {
             if (err) throw err;
             // Add user to DB
             User.create({
-                username,
-                password: hash,
-                email
-              })
-              .then(user => res.redirect(`/user/profile/${username}`))
+              username,
+              password: hash,
+              email
+            })
+              .then(user => res.redirect(`/user/login`))
               .catch(err => console.error(err));
           });
         });
@@ -85,19 +78,20 @@ router.post('/register', (req, res) => {
 // @route PUT /bio
 // @desc Update user bio
 router.put('/bio', ensureAuthenticated, (req, res) => {
-  const {
-    bio
-  } = req.body;
+  const { bio } = req.body;
   if (!bio) {
     res.redirect(`/user/profile/${req.user.username}`);
   }
-  User.update({
+  User.update(
+    {
       bio
-    }, {
+    },
+    {
       where: {
         id: req.user.id
       }
-    })
+    }
+  )
     .then(() => res.redirect(`/user/profile/${req.user.username}`))
     .catch(err => console.log(err));
 });
@@ -111,7 +105,6 @@ router.get('/login', (req, res) => {
 // @route POST /login
 // @desc login authentication
 router.post('/login', (req, res, next) => {
-  console.log('logging in....')
   passport.authenticate('local', {
     successRedirect: `/user/profile/${req.body.username}`,
     failureRedirect: '/user/login'
@@ -129,7 +122,7 @@ router.get('/logout', ensureAuthenticated, (req, res) => {
 // @desc User Profile
 // @param username - username of user
 router.get('/profile/:username', ensureAuthenticated, (req, res) => {
-  console.log('getting profile')
+  console.log('getting profile');
   User.findOne({
     where: {
       username: req.params.username
