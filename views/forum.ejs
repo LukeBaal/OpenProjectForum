@@ -6,26 +6,39 @@
         <h3 class="card-title"><%= post.title %></h3>
         <span class="ml-3 mt-2">
           <i class="fas fa-user"></i>
-          <%= post.user.username %>
+          <%= post.User.username %>
         </span>
       </div>
+      <div class="btn-group mb-2">
+        <form method="POST" action="/projects/<%= project_id %>/forum/<%= post.id %>/downvote?_method=PUT">
+          <button class="btn btn-outline-dark btn-block" type="submit">
+            <i class="fas fa-minus"></i>
+          </button>
+        </form>
+        <button class="btn btn-disabled" style="pointer-events: none"><%= post.rating %></button>
+        <form method="POST" action="/projects/<%= project_id %>/forum/<%= post.id %>/upvote?_method=PUT">
+          <button class="btn btn-outline-dark btn-block"  type="submit">
+            <i class="fas fa-plus"></i>
+          </button>
+        </form>
+      </div>
       <ul class="list-group">
-        <div class="list-group-item">ID: <%= post.id %></div>
-        <div class="list-group-item">Posted: <%= post.created_at %></div>
-        <div class="list-group-item">Updated: <%= post.updated_at %></div>
-        <div class="list-group-item">Body: <%= post.body %></div>
-        <% if (post.user.id == user.id) { %>
+        <p class="list-group-item"><%= post.body %></p>
+        <% if (post.User.id == user.id) { %>
         <div class="list-group-item">
-          <form method="POST" action="/projects/<%= project_id %>/forum/<%= post.id %>?_method=DELETE">
-            <div class="btn-group">
-              <a class="btn btn-warning" href="/projects/<%= project_id %>/forum/edit/<%= post.id %>">
-                <i class="fas fa-pencil-alt"></i>
-              </a>
-              <button class="btn btn-danger" type="submit">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-          </form>
+          <div class="d-flex justify-content-between">
+            <form method="POST" action="/projects/<%= project_id %>/forum/<%= post.id %>?_method=DELETE">
+              <div class="btn-group">
+                <a class="btn btn-warning" href="/projects/<%= project_id %>/forum/edit/<%= post.id %>">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <button class="btn btn-danger" type="submit">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </form>
+            <span class="text-muted">Posted: <%= new Date(post.created_at).toLocaleString() %></span>
+          </div>
         </div>
         <% } %>
       </ul>

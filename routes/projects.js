@@ -16,7 +16,6 @@ router.get('/', ensureAuthenticated, (req, res) => {
     ]
   })
     .then(projects => {
-      console.log(projects);
       res.render('projects', {
         projects,
         user: req.user

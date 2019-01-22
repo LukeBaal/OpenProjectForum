@@ -106,7 +106,7 @@ router.get('/login', (req, res) => {
 // @desc login authentication
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
-    successRedirect: `/user/profile/${req.body.username}`,
+    successRedirect: `/projects`,
     failureRedirect: '/user/login'
   })(req, res, next);
 });

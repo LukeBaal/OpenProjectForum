@@ -2,6 +2,7 @@ const express = require('express');
 const Project = require('../models/Project');
 const Post = require('../models/Post');
 const User = require('../models/User');
+const Vote = require('../models/Vote');
 const { ensureAuthenticated } = require('../config/auth');
 
 const router = express.Router({ mergeParams: true });
@@ -123,6 +124,50 @@ router.delete('/:post_id', ensureAuthenticated, (req, res) => {
   }).then(post => {
     res.redirect(`/projects/${req.params.project_id}/forum`);
   });
+});
+
+// @route PUT /:post_id/upvote
+// @desc Increment the given post's rating
+router.put('/:post_id/upvote', ensureAuthenticated, (req, res) => {
+  Vote.findOne({
+    where: {
+      user_id: req.user.id,
+      post_id: req.params.post_id
+    }
+  }).then(vote => {
+    if (vote) {
+      console.log('Already voted');
+    } else {
+      Post.increment('rating', {
+        where: {
+          id: req.params.post_id
+        }
+      })
+        .then(() => {
+          Vote.create({
+            user_id: req.user.id,
+            post_id: req.params.post_id
+          })
+            .then(() =>
+              res.redirect(`/projects/${req.params.project_id}/forum`)
+            )
+            .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+    }
+  });
+});
+
+// @route PUT /:post_id/downvote
+// @desc Decrement the given post's rating
+router.put('/:post_id/downvote', ensureAuthenticated, (req, res) => {
+  Post.decrement('rating', {
+    where: {
+      id: req.params.post_id
+    }
+  })
+    .then(() => res.redirect(`/projects/${req.params.project_id}/forum`))
+    .catch(err => console.log(err));
 });
 
 module.exports = router;

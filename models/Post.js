@@ -4,7 +4,8 @@ const Project = require('./Project');
 const User = require('./User');
 
 const Post = db.define(
-  'Post', {
+  'Post',
+  {
     title: {
       type: Sequelize.STRING
     },
@@ -12,9 +13,11 @@ const Post = db.define(
       type: Sequelize.STRING
     },
     rating: {
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      defaultValue: 0
     }
-  }, {
+  },
+  {
     underscored: true
   }
 );
