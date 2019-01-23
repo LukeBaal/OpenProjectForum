@@ -1,0 +1,94 @@
+<h3><%= post.title %></h3>
+<div class="card">
+  <div class="card-body">
+    <ul class="list-item-group">
+    <div class="list-item">
+      <p><%= post.body %></p>
+    </div>
+      <div class="list-item btn-group mb-2">
+        <form method="POST" action="/projects/<%= project_id %>/posts/<%= post.id %>/downvote?_method=PUT">
+          <button class="btn btn-outline-dark btn-block" type="submit" disabled="<%= typeof voted !== undefined ? 'true' : 'false' %>">
+            <i class="fas fa-minus"></i>
+          </button>
+        </form>
+        <button class="btn btn-disabled" style="pointer-events: none"><%= post.rating %></button>
+        <form method="POST" action="/projects/<%= project_id %>/posts/<%= post.id %>/upvote?_method=PUT">
+          <button class="btn btn-outline-dark btn-block" type="submit" disabled="<%= typeof voted !== undefined ? 'true' : 'false' %>">
+            <i class="fas fa-plus"></i>
+          </button>
+        </form>
+      </div>
+    </ul>
+  </div>
+</div>
+
+<% comments.forEach(comment => { %>
+  <div class="card bg-secondary mb-3">
+    <div class="card-body">
+      <div class="d-flex justify-content-between">          
+        <h3 class="card-title"><%= comment.title %></h3>
+        <span class="ml-3 mt-2">
+          <i class="fas fa-user"></i>
+          <%= comment.User.username %>
+        </span>
+      </div>
+      <div class="btn-group mb-2">
+        <form method="POST" action="/projects/<%= project_id %>/forum/<%= comment.id %>/downvote?_method=PUT">
+          <button class="btn btn-outline-dark btn-block" type="submit">
+            <i class="fas fa-minus"></i>
+          </button>
+        </form>
+        <button class="btn btn-disabled" style="pointer-events: none"><%= comment.rating %></button>
+        <form method="POST" action="/projects/<%= project_id %>/forum/<%= comment.id %>/upvote?_method=PUT">
+          <button class="btn btn-outline-dark btn-block"  type="submit">
+            <i class="fas fa-plus"></i>
+          </button>
+        </form>
+      </div>
+      <ul class="list-group">
+        <p class="list-group-item"><%= comment.body %></p>
+        <% if (comment.User.id == user.id) { %>
+        <div class="list-group-item">
+          <div class="d-flex justify-content-between">
+            <form method="POST" action="/projects/<%= project_id %>/forum/<%= comment.id %>?_method=DELETE">
+              <div class="btn-group">
+                <a class="btn btn-warning" href="/projects/<%= project_id %>/forum/edit/<%= comment.id %>">
+                  <i class="fas fa-pencil-alt"></i>
+                </a>
+                <button class="btn btn-danger" type="submit">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </form>
+            <span class="text-muted">Commented: <%= new Date(comment.created_at).toLocaleString() %></span>
+          </div>
+        </div>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+<% }); %>
+
+<% if (typeof user !== 'undefined') { %>
+<div class="card bg-secondary mt-3">
+  <div class="card-body">
+    <h3 class="card-title">Add Comment</h3>
+    <form action="/projects/<%= project_id %>/forum/add" method="POST" class="needs-validation">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input name="title" type="text" class="form-control" value="<%= typeof title !== 'undefined' ? title : '' %>"/>
+        <% if (errors.title) { %>
+          <div class="text-danger"><%= errors.title %></div>
+        <% } %>
+      </div>
+      <div class="form-group">
+        <label for="body">Comment</label>
+        <textarea class="form-control" name="body" id="body" cols="30" rows="10">
+    <%= typeof body !== 'undefined' ? body : '' %>
+        </textarea>
+      </div>
+      <input type="submit" value="Add Comment" class="btn btn-success btn-block">
+    </form>
+  </div>
+</div>
+<% } %>

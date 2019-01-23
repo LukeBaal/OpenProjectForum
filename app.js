@@ -9,13 +9,15 @@ const methodOverride = require('method-override');
 const User = require('./models/User');
 const Project = require('./models/Project');
 const Post = require('./models/Post');
+const Comment = require('./models/Comment');
+const Vote = require('./models/Vote');
 
 const app = express();
 
 // Init Passport
 require('./config/passport')(passport);
 
-process.env.NODE_ENV = 'test'
+process.env.NODE_ENV = 'test';
 // Database
 const db = require('./config/database')[process.env.NODE_ENV || 'dev'];
 
@@ -28,6 +30,8 @@ db.authenticate()
 User.sync();
 Project.sync();
 Post.sync();
+Comment.sync();
+Vote.sync();
 
 // Middleware
 // app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
@@ -35,9 +39,11 @@ Post.sync();
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
 
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: false
+  })
+);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -67,4 +73,6 @@ app.use('/user', require('./routes/user'));
 app.use('/projects', require('./routes/projects'));
 
 const PORT = process.env.PORT || 5000;
-module.exports = app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+module.exports = app.listen(PORT, () =>
+  console.log(`Server started on port ${PORT}`)
+);

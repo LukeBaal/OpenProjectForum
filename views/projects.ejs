@@ -5,11 +5,16 @@
     <div class="d-flex justify-content-between">
       <h3><%= project.title %></h3>
       <% if (user.id == project.User.id) {%>
-      <div class="button-group">
-        <a href="/projects/edit/<%= project.id %>" class="btn btn-warning">
-          <i class="fas fa-pencil-alt"></i>
-        </a>
-      </div>
+        <form action="/projects/<%= project.id %>?_method=DELETE" method="POST">
+          <div class="btn-group">
+            <a href="/projects/edit/<%= project.id %>" class="btn btn-warning">
+              <i class="fas fa-pencil-alt"></i>
+            </a>
+            <button type="submit" class="btn btn-danger">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </form>
       <% } %>
     </div>
       <p class="headline text-muted">Author: <%= project.User.username %></p>
@@ -18,7 +23,7 @@
     <% } %>
   </div>
     <div class="card-body">
-      <a href="/projects/<%= project.id %>/forum" class="card-link">
+      <a href="/projects/<%= project.id %>/posts" class="card-link">
         <i class="fas fa-comments"></i>
         Forum
       </a>

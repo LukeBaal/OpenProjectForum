@@ -121,6 +121,19 @@ router.put('/edit/:id', ensureAuthenticated, (req, res) => {
   }
 });
 
-router.use('/:project_id/forum', require('./posts'));
+// @route DELETE /:project_id
+// @desc Delete project
+router.delete('/:project_id', ensureAuthenticated, (req, res) => {
+  Project.destroy({
+    where: {
+      id: req.params.project_id,
+      user_id: req.user.id
+    }
+  })
+    .then(() => res.redirect('/projects'))
+    .catch(err => console.log(err));
+});
+
+router.use('/:project_id/posts', require('./posts'));
 
 module.exports = router;
