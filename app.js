@@ -45,7 +45,8 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Static assets folder
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // Express session
 app.use(

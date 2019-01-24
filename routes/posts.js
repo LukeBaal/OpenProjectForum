@@ -29,8 +29,7 @@ router.get('/', ensureAuthenticated, (req, res) => {
         errors: {},
         posts,
         user: req.user,
-        project_id: req.params.project_id,
-        voted: req.query.voted
+        project_id: req.params.project_id
       });
     })
     .catch(err => console.error(err));
@@ -123,11 +122,14 @@ router.put('/edit/:post_id', ensureAuthenticated, (req, res) => {
 router.delete('/:post_id', ensureAuthenticated, (req, res) => {
   Post.destroy({
     where: {
-      id: req.params.post_id
+      id: req.params.post_id,
+      user_id: req.user.id
     }
-  }).then(post => {
-    res.redirect(`/projects/${req.params.project_id}/posts`);
-  });
+  })
+    .then(post => {
+      res.redirect(`/projects/${req.params.project_id}/posts`);
+    })
+    .catch(err => console.log(err));
 });
 
 // @route PUT /:post_id/upvote
@@ -216,6 +218,11 @@ router.get('/:post_id', ensureAuthenticated, (req, res) => {
       }
 
       Comment.findAll({
+        include: [
+          {
+            model: User
+          }
+        ],
         where: {
           post_id: req.params.post_id
         }
@@ -233,5 +240,7 @@ router.get('/:post_id', ensureAuthenticated, (req, res) => {
     })
     .catch(err => console.log(err));
 });
+
+router.use('/:post_id/comments', require('./comments'));
 
 module.exports = router;
