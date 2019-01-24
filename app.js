@@ -66,7 +66,9 @@ app.use(passport.session());
 // @route GET /
 // @desc Home route
 app.get('/', (req, res) => {
-  res.render('index');
+  res.render('index', {
+    user: req.user
+  });
 });
 
 app.use('/user', require('./routes/user'));

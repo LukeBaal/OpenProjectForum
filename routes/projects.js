@@ -28,7 +28,8 @@ router.get('/', ensureAuthenticated, (req, res) => {
 // @desc Add project form
 router.get('/add', ensureAuthenticated, (req, res) => {
   res.render('add_project', {
-    errors: {}
+    errors: {},
+    user: req.user
   });
 });
 
@@ -70,6 +71,7 @@ router.get('/edit/:id', ensureAuthenticated, (req, res) => {
     if (project) {
       console.log(`Project id: ${project.id}`);
       res.render('edit_project', {
+        user: req.user,
         id: project.id,
         title: project.title,
         github: project.github,

@@ -21,33 +21,46 @@
           <a class="dropdown-item" href="/projects/add">Add Project</a>
         </div>
       </li>
-        <li class="nav-item"><a href="/user/profile/<%= user.username %>" class="nav-link">User</a></li>
+        <li class="nav-item"><a href="/user/profile/<%= user.username %>" class="nav-link">Profile</a></li>
         <% } %>
       </ul>
 
-      <ul class="navbar-nav ml-auto">
-        <% if (typeof user !== 'undefined') {%>
-        
-        <li class="nav-item">
-          <a href="/user/profile/<%= user.username %>" class="nav-link">
-            <i class="fas fa-user mr-1"></i>
-            <%= user.username %>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/user/logout">
-            Logout
-          </a>
-        </li>
-        <%} else {%>
-        <li class="nav-item">
-          <a class="nav-link" href="/user/register">Register</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/user/login">Login</a>
-        </li>
-        <%}%>
-
-      </ul>
+        <div class="ml-auto d-flex">
+          <% if (typeof user !== 'undefined') {%>
+          <form class="form-inline  mr-5" method="POST" action="/user/profile/search">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <i class="input-group-text fas fa-user bg-info text-white"></i>
+              </div>
+              <input name="username" class="form-control" type="search" placeholder="Search" aria-label="Search">
+              <div class="input-group-append">
+                <button class="btn btn-info my-2 my-sm-0" type="submit">Search User</button>
+              </div>
+            </div>
+          </form>
+          <%}%>
+          <ul class="navbar-nav">
+          <% if (typeof user !== 'undefined') {%>
+            <li class="nav-item">
+              <a href="/user/profile/<%= user.username %>" class="nav-link">
+                <i class="fas fa-user mr-1"></i>
+                <%= user.username %>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/logout">
+                Logout
+              </a>
+            </li>
+            <%} else {%>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/register">Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/user/login">Login</a>
+            </li>
+          <%}%>
+          </ul>
+        </div>
     </div>
   </div>

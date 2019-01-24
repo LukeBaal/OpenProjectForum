@@ -1,6 +1,6 @@
 const express = require('express');
 const Comment = require('../models/Comment');
-const Post = require('../models/Post');
+const Vote = require('../models/Vote');
 const { ensureAuthenticated } = require('../config/auth');
 
 const router = express.Router({ mergeParams: true });
@@ -106,6 +106,72 @@ router.delete('/:comment_id', ensureAuthenticated, (req, res) => {
       res.redirect(`/projects/${project_id}/posts/${post_id}`);
     })
     .catch(err => console.log(err));
+});
+
+// @route PUT /:comment_id/upvote
+// @desc Increment the given post's rating
+router.put('/:comment_id/upvote', ensureAuthenticated, (req, res) => {
+  const { project_id, post_id, comment_id } = req.params;
+  Vote.findOne({
+    where: {
+      user_id: req.user.id,
+      comment_id
+    }
+  }).then(vote => {
+    if (vote) {
+      res.redirect(`/projects/${project_id}/posts/${post_id}`);
+    } else {
+      Comment.increment('rating', {
+        where: {
+          id: comment_id
+        }
+      })
+        .then(() => {
+          Vote.create({
+            user_id: req.user.id,
+            comment_id
+          })
+            .then(() =>
+              res.redirect(`/projects/${project_id}/posts/${post_id}`)
+            )
+            .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+    }
+  });
+});
+
+// @route PUT /:comment_id/downvote
+// @desc Decrement the given post's rating
+router.put('/:comment_id/downvote', ensureAuthenticated, (req, res) => {
+  const { project_id, post_id, comment_id } = req.params;
+  Vote.findOne({
+    where: {
+      user_id: req.user.id,
+      comment_id
+    }
+  }).then(vote => {
+    if (vote) {
+      res.redirect(`/projects/${project_id}/posts/${post_id}`);
+    } else {
+      Comment.decrement('rating', {
+        where: {
+          id: comment_id
+        }
+      })
+        .then(() => {
+          Vote.create({
+            user_id: req.user.id,
+            comment_id
+          })
+            .then(() =>
+              res.redirect(`/projects/${project_id}/posts/${post_id}`)
+            )
+            .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
+    }
+  });
 });
 
 module.exports = router;

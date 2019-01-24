@@ -118,11 +118,30 @@ router.get('/logout', ensureAuthenticated, (req, res) => {
   res.redirect('/user/login');
 });
 
+// @route POST /profile/search
+// @desc Search for user with given username
+router.post('/profile/search', ensureAuthenticated, (req, res) => {
+  console.log('searching....');
+  console.log(req.body.username);
+  User.findOne({
+    where: {
+      username: req.body.username
+    }
+  })
+    .then(user => {
+      if (!user) {
+        res.redirect('back');
+      } else {
+        res.redirect(`/user/profile/${user.username}`);
+      }
+    })
+    .catch(err => console.log(err));
+});
+
 // @route /profile/:username
 // @desc User Profile
 // @param username - username of user
 router.get('/profile/:username', ensureAuthenticated, (req, res) => {
-  console.log('getting profile');
   User.findOne({
     where: {
       username: req.params.username

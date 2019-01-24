@@ -1,10 +1,14 @@
 <h1 class="card-title"><%= user.username %></h1>
 <h5 class="card-subtitle mb-2 text-muted"> <i class="fas fa-envelope mr-2"></i><%= user.email %></h5>
 <% if (auth_user.username !== user.username) {%>
-<p class="headline text-muted">Bio</p>
-<p><%= user.bio %></p>
+  <h5 class="headline text-muted">Bio</h5>
+  <div class="card border-dark">
+    <div class="card-body">
+      <%= user.bio %>
+    </div>
+  </div>
 <% } else { %>
-<form action="/auth_user/bio?_method=PUT" method="POST">
+<form action="/user/bio?_method=PUT" method="POST">
   <div class="form-group">
     <label for="bio">Bio</label>
     <textarea class="form-control mb-2" name="bio" id="bio" cols="30" rows="10">

@@ -16,10 +16,7 @@ module.exports = function(passport) {
           }
         }).then(user => {
           if (!user) {
-            console.log('invalid username');
-            return done(null, false, {
-              message: 'Invalid username'
-            });
+            return done(null, false);
           }
           // Compare passwords
           bcrypt.compare(password, user.password, (err, isMatch) => {
@@ -27,9 +24,7 @@ module.exports = function(passport) {
             if (isMatch) {
               return done(null, user);
             } else {
-              return done(null, false, {
-                message: 'Invalid password'
-              });
+              return done(null, false);
             }
           });
         });
