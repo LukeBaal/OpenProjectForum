@@ -1,5 +1,10 @@
 <div class="d-flex justify-content-between">
-  <h3><%= post.title %></h3>
+  <div class="d-flex justify-content-between">
+    <a class="btn btn-primary mb-3" href="/projects">
+      <i class="fas fa-arrow-left fa-2x"></i>
+    </a>
+    <h3 class="mt-1 ml-2"><%= post.title %></h3>
+  </div>
   <span class="ml-3 mt-2">
     <i class="fas fa-user"></i>
     <%= post.User.username %>
@@ -106,3 +111,4 @@
     </form>
   </div>
 </div>
+
