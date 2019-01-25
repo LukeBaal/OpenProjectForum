@@ -4,7 +4,7 @@
     <form action="/projects/<%= project_id %>/posts/add" method="POST" class="needs-validation">
       <div class="form-group">
         <label for="title">Title</label>
-        <input name="title" type="text" class="form-control" value="<%= typeof title !== 'undefined' ? title : '' %>"/>
+        <input name="title" type="text" class="form-control <%= errors.title ? 'is-invalid' : '' %>" value="<%= typeof title !== 'undefined' ? title : '' %>"/>
         <% if (errors.title) { %>
           <div class="text-danger"><%= errors.title %></div>
         <% } %>
@@ -12,7 +12,7 @@
       <div class="form-group">
         <label for="body">Content</label>
         <textarea class="form-control" name="body" id="body" cols="30" rows="10">
-    <%= typeof body !== 'undefined' ? body : '' %>
+    <%= typeof commentBody !== 'undefined' ? commentBody : '' %>
         </textarea>
       </div>
       <input type="submit" value="Add Post" class="btn btn-success btn-block">
