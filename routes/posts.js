@@ -24,7 +24,8 @@ router.get('/', ensureAuthenticated, (req, res) => {
     ],
     where: {
       project_id: project_id
-    }
+    },
+    order: [['rating', 'DESC']]
   })
     .then(posts => {
       res.render('posts', {
@@ -235,7 +236,8 @@ router.get('/:post_id', ensureAuthenticated, (req, res) => {
         ],
         where: {
           post_id
-        }
+        },
+        order: [['rating', 'DESC']]
       })
         .then(comments => {
           res.render('post', {
