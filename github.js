@@ -15,7 +15,8 @@ const getLatestPushDate = url => {
     .then(res => {
       const latestPush = res.data.find(event => event.type === 'PushEvent');
       return latestPush.created_at;
-    });
+    })
+    .catch(err => console.log(err));
 };
 
 module.exports = getLatestPushDate;

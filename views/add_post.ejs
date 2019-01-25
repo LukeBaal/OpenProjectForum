@@ -15,7 +15,10 @@
     <%= typeof commentBody !== 'undefined' ? commentBody : '' %>
         </textarea>
       </div>
-      <input type="submit" value="Add Post" class="btn btn-success btn-block">
+      <div class="d-flex">
+        <a class="btn btn-primary mr-3" href="/projects/<%= project_id %>/posts">Cancel</a>
+        <input type="submit" value="Add Post" class="btn btn-success btn-block">
+      </div>
     </form>
   </div>
 </div>
