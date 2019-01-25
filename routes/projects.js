@@ -2,26 +2,61 @@ const express = require('express');
 const Project = require('../models/Project');
 const User = require('../models/User');
 const { ensureAuthenticated } = require('../config/auth');
+const getLatestPushDate = require('../github');
 
 const router = express.Router();
 
 // @route GET /
 // @desc Get all projects
-router.get('/', ensureAuthenticated, (req, res) => {
-  Project.findAll({
+// router.get('/', ensureAuthenticated, (req, res) => {
+//   Project.findAll({
+//     include: [
+//       {
+//         model: User
+//       }
+//     ]
+//   })
+//     .then(projects => {
+//       const pushDates = [];
+//       projects.forEach(project => {
+//         if (project.github) {
+//           getLatestPushDate(project.github).then(latestPushDate =>
+//             pushDates.push(pushDates)
+//           );
+//         }
+//       });
+
+//       res.render('projects', {
+//         projects,
+//         pushDates,
+//         user: req.user
+//       });
+//     })
+//     .catch(err => console.error(err));
+// });
+
+router.get('/', ensureAuthenticated, async (req, res) => {
+  projects = await Project.findAll({
     include: [
       {
         model: User
       }
     ]
-  })
-    .then(projects => {
-      res.render('projects', {
-        projects,
-        user: req.user
-      });
-    })
-    .catch(err => console.error(err));
+  });
+
+  const pushDates = {};
+
+  for (let project of projects) {
+    if (project.github) {
+      latestPushDate = await getLatestPushDate(project.github);
+      pushDates[project.title] = latestPushDate;
+    }
+  }
+  res.render('projects', {
+    projects,
+    pushDates,
+    user: req.user
+  });
 });
 
 // @route GET /add
