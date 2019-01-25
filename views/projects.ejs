@@ -23,12 +23,12 @@
     <% } %>
   </div>
     <div class="card-body">
-      <a href="/projects/<%= project.id %>/posts" class="card-link">
+      <a href="/projects/<%= project.id %>/posts" class="card-link btn btn-outline-info">
         <i class="fas fa-comments"></i>
         Forum
       </a>
       <% if (project.github) { %>
-        <a href="<%= project.github %>" class="card-link">
+        <a href="<%= project.github %>" class="card-link btn btn-outline-info">
           <i class="fab fa-github"></i>
           GitHub
         </a>

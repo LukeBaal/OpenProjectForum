@@ -10,9 +10,15 @@ const Post = require('../models/Post');
 
 const server = require('../app');
 
-User.sync({ force: true });
-Project.sync({ force: true });
-Post.sync({ force: true });
+User.sync({
+  force: true
+});
+Project.sync({
+  force: true
+});
+Post.sync({
+  force: true
+});
 
 describe('GET /', () => {
   it('should get home route', done => {
@@ -24,7 +30,7 @@ describe('GET /', () => {
         res.status.should.equal(200);
         res.type.should.equal('text/html');
         res.text.should.contain('Open Source Project Viewer');
-        res.text.should.contain('Index');
+        res.text.should.contain('Connect');
         done();
       });
   });

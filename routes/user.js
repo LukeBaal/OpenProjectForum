@@ -6,6 +6,7 @@ const passport = require('passport');
 const { ensureAuthenticated } = require('../config/auth');
 
 const User = require('../models/User');
+const Project = require('../models/Project');
 
 // Register
 router.get('/register', (req, res) => {
@@ -106,7 +107,7 @@ router.get('/login', (req, res) => {
 // @desc login authentication
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
-    successRedirect: `/projects`,
+    successRedirect: '/projects',
     failureRedirect: '/user/login'
   })(req, res, next);
 });
@@ -139,10 +140,15 @@ router.post('/profile/search', ensureAuthenticated, (req, res) => {
 });
 
 // @route /profile/:username
-// @desc User Profile
+// @desc Get user profile and owned projects
 // @param username - username of user
 router.get('/profile/:username', ensureAuthenticated, (req, res) => {
   User.findOne({
+    include: [
+      {
+        model: Project
+      }
+    ],
     where: {
       username: req.params.username
     }

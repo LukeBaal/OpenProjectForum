@@ -1,4 +1,11 @@
-<h3><%= post.title %></h3>
+<div class="d-flex justify-content-between">
+  <h3><%= post.title %></h3>
+  <span class="ml-3 mt-2">
+    <i class="fas fa-user"></i>
+    <%= post.User.username %>
+    <span class="text-muted"> - Posted: <%= new Date(post.created_at).toLocaleString() %></span>
+  </span>
+</div>
 <div class="card border-dark">
   <div class="card-body">
     <div class="d-flex">

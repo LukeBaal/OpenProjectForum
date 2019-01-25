@@ -1,10 +1,17 @@
-<h1 class="card-title"><%= user.username %></h1>
+<h1 class="card-title">
+  <i class="fas fa-user"></i>
+  <%= user.username %>
+</h1>
 <h5 class="card-subtitle mb-2 text-muted"> <i class="fas fa-envelope mr-2"></i><%= user.email %></h5>
 <% if (auth_user.username !== user.username) {%>
   <h5 class="headline text-muted">Bio</h5>
   <div class="card border-dark">
     <div class="card-body">
+    <% if (!user.bio || user.bio === '') { %>
+      Forever a mystery...
+    <% } else { %>
       <%= user.bio %>
+    <% } %>
     </div>
   </div>
 <% } else { %>
@@ -20,3 +27,19 @@
   </div>
 </form>
 <% } %>
+<div class="card border-dark mt-3">
+  <div class="card-body">
+    <h5 class="card-title"><%= user.username %>'s Projects</h5>
+      <% user.Projects.forEach(project => { %>
+        <div class="card border-dark mb-2">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <span class="lead"><%= project.title %></span>
+              <span class="text-muted">Created: <%= new Date(project.created_at).toLocaleDateString() %></span>
+            </div>
+            <p class="mt-1"><%= project.description %></p>
+          </div>
+        </div>
+      <% }) %>
+  </div>
+</div>
