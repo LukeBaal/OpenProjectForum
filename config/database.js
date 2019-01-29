@@ -1,9 +1,11 @@
 const Sequelize = require('sequelize');
 
 module.exports = {
-  production: new Sequelize('ospv', 'postgres', 'example', {
+  production: new Sequelize(process.env.DATABASE_URL, {
     host: process.env.DATABASE_URL,
     dialect: 'postgres',
+    protocol: 'postgres',
+    logging: true,
     operatorsAliases: false,
     pool: {
       max: 5,
