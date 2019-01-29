@@ -37,6 +37,7 @@ router.post('/add', ensureAuthenticated, (req, res) => {
 
 // @route GET /edit/:comment_id
 // @desc Get edit comment form
+// @param comment_id ID of the comment
 router.get('/edit/:comment_id', ensureAuthenticated, (req, res) => {
   Comment.findByPk(req.params.comment_id).then(comment => {
     if (!comment) {
@@ -57,6 +58,7 @@ router.get('/edit/:comment_id', ensureAuthenticated, (req, res) => {
 
 // @route PUT /edit/:comment_id
 // @desc Edit post with given id
+// @param comment_id ID of the comment
 router.put('/edit/:comment_id', ensureAuthenticated, (req, res) => {
   const { title, body } = req.body;
   const errors = {};
@@ -94,6 +96,7 @@ router.put('/edit/:comment_id', ensureAuthenticated, (req, res) => {
 
 // @route DELETE /:comment_id
 // @desc delete comment
+// @param comment_id ID of the comment
 router.delete('/:comment_id', ensureAuthenticated, (req, res) => {
   const { project_id, post_id, comment_id } = req.params;
   Comment.destroy({
@@ -110,6 +113,7 @@ router.delete('/:comment_id', ensureAuthenticated, (req, res) => {
 
 // @route PUT /:comment_id/upvote
 // @desc Increment the given post's rating
+// @param comment_id ID of the comment
 router.put('/:comment_id/upvote', ensureAuthenticated, (req, res) => {
   const { project_id, post_id, comment_id } = req.params;
   Vote.findOne({
@@ -143,6 +147,7 @@ router.put('/:comment_id/upvote', ensureAuthenticated, (req, res) => {
 
 // @route PUT /:comment_id/downvote
 // @desc Decrement the given post's rating
+// @param comment_id ID of the comment
 router.put('/:comment_id/downvote', ensureAuthenticated, (req, res) => {
   const { project_id, post_id, comment_id } = req.params;
   Vote.findOne({

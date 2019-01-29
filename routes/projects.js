@@ -8,33 +8,6 @@ const router = express.Router();
 
 // @route GET /
 // @desc Get all projects
-// router.get('/', ensureAuthenticated, (req, res) => {
-//   Project.findAll({
-//     include: [
-//       {
-//         model: User
-//       }
-//     ]
-//   })
-//     .then(projects => {
-//       const pushDates = [];
-//       projects.forEach(project => {
-//         if (project.github) {
-//           getLatestPushDate(project.github).then(latestPushDate =>
-//             pushDates.push(pushDates)
-//           );
-//         }
-//       });
-
-//       res.render('projects', {
-//         projects,
-//         pushDates,
-//         user: req.user
-//       });
-//     })
-//     .catch(err => console.error(err));
-// });
-
 router.get('/', ensureAuthenticated, async (req, res) => {
   projects = await Project.findAll({
     include: [
@@ -101,6 +74,7 @@ router.post('/add', ensureAuthenticated, (req, res) => {
 
 // @route GET /edit
 // @desc Edit project form
+// @param id ID of the project
 router.get('/edit/:id', ensureAuthenticated, (req, res) => {
   Project.findByPk(req.params.id).then(project => {
     if (project) {
@@ -121,6 +95,7 @@ router.get('/edit/:id', ensureAuthenticated, (req, res) => {
 
 // @route PUT /edit
 // @desc Edit project
+// @param id ID of the project
 router.put('/edit/:id', ensureAuthenticated, (req, res) => {
   let { title, github, description } = req.body;
   const errors = {};
@@ -160,6 +135,7 @@ router.put('/edit/:id', ensureAuthenticated, (req, res) => {
 
 // @route DELETE /:project_id
 // @desc Delete project
+// @param project_id ID of the project
 router.delete('/:project_id', ensureAuthenticated, (req, res) => {
   Project.destroy({
     where: {

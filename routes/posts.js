@@ -81,6 +81,7 @@ router.post('/add', ensureAuthenticated, (req, res) => {
 
 // @route GET /edit/:post_id
 // @desc Get edit form
+// @param post_id ID of the post
 router.get('/edit/:post_id', ensureAuthenticated, (req, res) => {
   const { project_id, post_id } = req.params;
   Post.findByPk(post_id)
@@ -99,6 +100,7 @@ router.get('/edit/:post_id', ensureAuthenticated, (req, res) => {
 
 // @route PUT /edit/:post_id
 // @desc Edit post with given id
+// @param post_id ID of the post
 router.put('/edit/:post_id', ensureAuthenticated, (req, res) => {
   const { project_id, post_id } = req.params;
 
@@ -132,6 +134,7 @@ router.put('/edit/:post_id', ensureAuthenticated, (req, res) => {
 
 // @route DELETE /:post_id
 // @desc delete post
+// @param post_id ID of the post
 router.delete('/:post_id', ensureAuthenticated, (req, res) => {
   const { project_id, post_id } = req.params;
   Post.destroy({
@@ -148,6 +151,7 @@ router.delete('/:post_id', ensureAuthenticated, (req, res) => {
 
 // @route PUT /:post_id/upvote
 // @desc Increment the given post's rating
+// @param post_id ID of the post
 router.put('/:post_id/upvote', ensureAuthenticated, (req, res) => {
   const { project_id, post_id } = req.params;
   Vote.findOne({
@@ -181,6 +185,7 @@ router.put('/:post_id/upvote', ensureAuthenticated, (req, res) => {
 
 // @route PUT /:post_id/downvote
 // @desc Decrement the given post's rating
+// @param post_id ID of the post
 router.put('/:post_id/downvote', ensureAuthenticated, (req, res) => {
   const { project_id, post_id } = req.params;
   Vote.findOne({
@@ -214,6 +219,7 @@ router.put('/:post_id/downvote', ensureAuthenticated, (req, res) => {
 
 // @route GET /:post_id
 // @desc Get Post details and comments
+// @param post_id ID of the post
 router.get('/:post_id', ensureAuthenticated, (req, res) => {
   const { project_id, post_id } = req.params;
   Post.findByPk(post_id, {
